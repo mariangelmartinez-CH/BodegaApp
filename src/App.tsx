@@ -1,11 +1,24 @@
+import { BrowserRouter, Route, Routes } from 'react-router'
+import Layout from './components/Layout'
+import Caja from './pages/Caja'
+import Facturas from './pages/Facturas'
+import Fiados from './pages/Fiados'
+import Inventario from './pages/Inventario'
+import Vender from './pages/Vender'
+
 function App() {
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col items-center justify-center gap-6 p-6">
-      <h1 className="text-4xl font-extrabold text-green-600">Bodega</h1>
-      <button className="w-full rounded-2xl bg-green-500 px-6 py-4 text-xl font-bold text-white shadow-[0_4px_0_0_#15803d] active:translate-y-1 active:shadow-none">
-        Registrar venta
-      </button>
-    </main>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route index element={<Vender />} />
+          <Route path="inventario" element={<Inventario />} />
+          <Route path="caja" element={<Caja />} />
+          <Route path="fiados" element={<Fiados />} />
+          <Route path="facturas" element={<Facturas />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 
