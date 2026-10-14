@@ -1,3 +1,5 @@
+import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query'
+import { useEffect } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router'
 import { AuthProvider } from './auth/AuthProvider'
 import { useAuth } from './auth/context'
@@ -9,8 +11,15 @@ import Inventario from './pages/Inventario'
 import Login from './pages/Login'
 import Vender from './pages/Vender'
 
+const queryClient = new QueryClient()
+
 function Rutas() {
   const { session, perfil, cargando } = useAuth()
+  const cliente = useQueryClient()
+
+  useEffect(() => {
+    if (!session) cliente.clear()
+  }, [session, cliente])
 
   if (cargando) {
     return (
@@ -39,11 +48,13 @@ function Rutas() {
 
 function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <Rutas />
-      </AuthProvider>
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <AuthProvider>
+          <Rutas />
+        </AuthProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
   )
 }
 

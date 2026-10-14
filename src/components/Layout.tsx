@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router'
 import { useAuth } from '../auth/context'
+import { useTiempoReal } from '../data/useTiempoReal'
 import type { Rol } from '../types'
 import BottomNav from './BottomNav'
 
@@ -11,6 +12,7 @@ const etiquetaRol: Record<Rol, string> = {
 
 function Layout() {
   const { perfil, cerrarSesion } = useAuth()
+  useTiempoReal()
 
   return (
     <div className="mx-auto flex min-h-screen max-w-md flex-col">
