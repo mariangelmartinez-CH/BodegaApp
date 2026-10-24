@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import { useAuth } from '../auth/context'
 import Icono from '../components/Icono'
 import PageTitle from '../components/PageTitle'
@@ -7,6 +7,21 @@ import { useCategorias, useInventario } from '../data/consultas'
 import { claseCategoria } from '../lib/colores'
 import { formatoCantidad } from '../lib/formato'
 import type { ProductoInventario } from '../types'
+
+function BarraSuperior({ onVolver, children }: { onVolver: () => void; children: ReactNode }) {
+  return (
+    <div className="sticky top-[65px] z-[9] -mx-4 mb-4 flex items-center justify-between gap-3 border-b border-borde bg-fondo/95 px-4 py-2.5 backdrop-blur">
+      <button
+        onClick={onVolver}
+        className="flex shrink-0 items-center gap-1 text-sm font-medium text-azul"
+      >
+        <Icono nombre="flecha" className="h-4 w-4 rotate-180" />
+        Categorías
+      </button>
+      <div className="flex min-w-0 items-center gap-2">{children}</div>
+    </div>
+  )
+}
 
 function FilaProducto({
   p,
@@ -78,27 +93,22 @@ function Inventario() {
   const categoriaActual = lista.find((c) => c.id === categoriaId) ?? null
   const faltan = productos.filter((p) => p.stock <= p.stock_minimo)
 
-  const volver = (
-    <button
-      onClick={() => {
-        setSoloFalta(false)
-        setCategoriaId(null)
-      }}
-      className="mb-4 flex items-center gap-1 text-sm font-medium text-azul"
-    >
-      <Icono nombre="flecha" className="h-4 w-4 rotate-180" />
-      Categorías
-    </button>
-  )
+  function irACategorias() {
+    setSoloFalta(false)
+    setCategoriaId(null)
+    window.scrollTo({ top: 0 })
+  }
 
   if (soloFalta) {
     return (
       <>
-        {volver}
-        <h1 className="text-xl font-semibold tracking-tight text-texto">Lo que falta</h1>
-        <p className="mb-4 mt-1 text-sm text-suave">
-          Productos sin stock o por debajo del mínimo ({faltan.length}).
-        </p>
+        <BarraSuperior onVolver={irACategorias}>
+          <span className="truncate font-semibold text-texto">Lo que falta</span>
+          <span className="rounded-full bg-red-500/15 px-2 py-0.5 text-xs font-medium text-red-300">
+            {faltan.length}
+          </span>
+        </BarraSuperior>
+        <p className="mb-4 text-sm text-suave">Productos sin stock o por debajo del mínimo.</p>
         <ul className="flex flex-col gap-2">
           {faltan.map((p) => (
             <FilaProducto
@@ -150,7 +160,10 @@ function Inventario() {
             return (
               <li key={c.id}>
                 <button
-                  onClick={() => setCategoriaId(c.id)}
+                  onClick={() => {
+                    setCategoriaId(c.id)
+                    window.scrollTo({ top: 0 })
+                  }}
                   className="flex w-full items-center gap-3 rounded-xl border border-borde bg-superficie p-3 text-left transition-colors active:bg-superficie-2"
                 >
                   <span
@@ -183,21 +196,15 @@ function Inventario() {
 
   return (
     <>
-      {volver}
-
-      <div className="mb-5 flex items-center gap-3">
+      <BarraSuperior onVolver={irACategorias}>
         <span
-          className={`flex h-12 w-12 items-center justify-center rounded-lg border text-2xl ${claseCategoria(categoriaActual.color)}`}
+          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border text-lg ${claseCategoria(categoriaActual.color)}`}
         >
           {categoriaActual.emoji}
         </span>
-        <div>
-          <h1 className="text-xl font-semibold tracking-tight text-texto">
-            {categoriaActual.nombre}
-          </h1>
-          <p className="text-sm text-suave">{deCategoria.length} productos</p>
-        </div>
-      </div>
+        <span className="truncate font-semibold text-texto">{categoriaActual.nombre}</span>
+        <span className="shrink-0 text-sm text-suave">{deCategoria.length}</span>
+      </BarraSuperior>
 
       <ul className="flex flex-col gap-2">
         {deCategoria.map((p) => (

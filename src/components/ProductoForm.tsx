@@ -22,6 +22,27 @@ function ProductoForm({ producto, categoriaId, onCerrar }: Props) {
   const [error, setError] = useState<string | null>(null)
   const [guardando, setGuardando] = useState(false)
 
+  async function eliminar() {
+    if (!producto) return
+    const aviso = `¿Eliminar "${producto.nombre}"? Desaparece del inventario y del conteo, pero el historial se conserva.`
+    if (!window.confirm(aviso)) return
+
+    setError(null)
+    setGuardando(true)
+    const { error: fallo } = await supabase
+      .from('products')
+      .update({ activo: false })
+      .eq('id', producto.id)
+    if (fallo) {
+      setError(fallo.message)
+      setGuardando(false)
+      return
+    }
+    await queryClient.invalidateQueries({ queryKey: ['inventario'] })
+    setGuardando(false)
+    onCerrar()
+  }
+
   async function guardar(e: FormEvent) {
     e.preventDefault()
     setError(null)
@@ -147,6 +168,17 @@ function ProductoForm({ producto, categoriaId, onCerrar }: Props) {
           >
             {guardando ? 'Guardando...' : 'Guardar'}
           </button>
+
+          {producto && (
+            <button
+              type="button"
+              onClick={eliminar}
+              disabled={guardando}
+              className="w-full rounded-xl border border-red-500/30 px-6 py-3 text-base font-medium text-red-400 active:bg-red-500/10 disabled:opacity-60"
+            >
+              Eliminar producto
+            </button>
+          )}
         </div>
       </form>
     </div>
