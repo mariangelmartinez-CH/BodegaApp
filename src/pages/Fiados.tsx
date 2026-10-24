@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useAuth } from '../auth/context'
 import FiadoForm from '../components/FiadoForm'
@@ -5,6 +6,7 @@ import PageTitle from '../components/PageTitle'
 import PagoForm from '../components/PagoForm'
 import { useFiados } from '../data/fiados'
 import { formatoPesos } from '../lib/formato'
+import { supabase } from '../lib/supabase'
 import type { Fiado } from '../types'
 
 function textoFecha(fecha: string) {
@@ -18,12 +20,16 @@ function GrupoCliente({
   nombre,
   lineas,
   puedeRegistrar,
+  esAdmin,
   onPagar,
+  onBorrar,
 }: {
   nombre: string
   lineas: Fiado[]
   puedeRegistrar: boolean
+  esAdmin: boolean
   onPagar: (f: Fiado) => void
+  onBorrar: (f: Fiado) => void
 }) {
   const total = lineas.reduce((suma, f) => suma + f.saldo, 0)
 
@@ -51,14 +57,24 @@ function GrupoCliente({
                 {f.nota && `, ${f.nota}`}
               </p>
             </div>
-            {puedeRegistrar && (
-              <button
-                onClick={() => onPagar(f)}
-                className="rounded-2xl bg-verde px-4 py-2 text-sm font-bold text-fondo active:scale-[0.98]"
-              >
-                Pagó
-              </button>
-            )}
+            <div className="flex items-center gap-3">
+              {esAdmin && (
+                <button
+                  onClick={() => onBorrar(f)}
+                  className="text-sm font-medium text-red-400"
+                >
+                  Borrar
+                </button>
+              )}
+              {puedeRegistrar && (
+                <button
+                  onClick={() => onPagar(f)}
+                  className="rounded-xl bg-verde px-4 py-2 text-sm font-semibold text-fondo active:scale-[0.98]"
+                >
+                  Pagó
+                </button>
+              )}
+            </div>
           </li>
         ))}
       </ul>
@@ -69,9 +85,18 @@ function GrupoCliente({
 function Fiados() {
   const { perfil } = useAuth()
   const puedeRegistrar = perfil?.rol === 'admin' || perfil?.rol === 'operador'
+  const esAdmin = perfil?.rol === 'admin'
+  const cliente = useQueryClient()
   const fiados = useFiados()
   const [nuevo, setNuevo] = useState(false)
   const [pagando, setPagando] = useState<Fiado | null>(null)
+
+  async function borrar(f: Fiado) {
+    const aviso = `¿Borrar el fiado de ${f.cliente} por ${formatoPesos(f.monto)}? Se borran también sus pagos.`
+    if (!window.confirm(aviso)) return
+    await supabase.from('debts').delete().eq('id', f.id)
+    await cliente.invalidateQueries({ queryKey: ['fiados'] })
+  }
 
   if (fiados.isLoading) {
     return <p className="py-10 text-center font-bold text-suave">Cargando...</p>
@@ -124,7 +149,9 @@ function Fiados() {
             nombre={nombre}
             lineas={lineas}
             puedeRegistrar={puedeRegistrar}
+            esAdmin={esAdmin}
             onPagar={setPagando}
+            onBorrar={borrar}
           />
         ))}
       </ul>

@@ -92,3 +92,10 @@ export type Pedido = {
   suppliers: { nombre: string } | null
   order_items: ItemPedido[]
 }
+
+export type EfectivoManual = {
+  id: string
+  monto: number
+  nota: string | null
+  creado_en: string
+}

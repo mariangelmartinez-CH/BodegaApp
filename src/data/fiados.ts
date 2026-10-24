@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '../lib/supabase'
-import type { CierreCerrado, Cliente, Fiado } from '../types'
+import type { CierreCerrado, Cliente, EfectivoManual, Fiado } from '../types'
 
 export function useFiados() {
   return useQuery({
@@ -43,6 +43,21 @@ export function useCierres() {
         .limit(12)
       if (error) throw error
       return data as CierreCerrado[]
+    },
+  })
+}
+
+export function useEfectivoManual() {
+  return useQuery({
+    queryKey: ['efectivo'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('cash_counts')
+        .select('id, monto, nota, creado_en')
+        .order('creado_en', { ascending: false })
+        .limit(30)
+      if (error) throw error
+      return data as EfectivoManual[]
     },
   })
 }

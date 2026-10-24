@@ -7,6 +7,7 @@ const cambios: { tabla: string; claves: string[] }[] = [
   { tabla: 'stock_movements', claves: ['inventario'] },
   { tabla: 'categories', claves: ['categorias'] },
   { tabla: 'weekly_closings', claves: ['cierres', 'cierre-abierto', 'cierres-cerrados'] },
+  { tabla: 'cash_counts', claves: ['efectivo'] },
   { tabla: 'customers', claves: ['clientes', 'fiados'] },
   { tabla: 'debts', claves: ['fiados'] },
   { tabla: 'debt_payments', claves: ['fiados'] },
