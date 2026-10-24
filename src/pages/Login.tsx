@@ -7,6 +7,7 @@ function Login() {
   const [clave, setClave] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [enviando, setEnviando] = useState(false)
+  const [mostrar, setMostrar] = useState(false)
 
   async function enviar(e: FormEvent) {
     e.preventDefault()
@@ -37,15 +38,24 @@ function Login() {
           required
           className="rounded-2xl border-2 border-gray-200 bg-white px-4 py-3 text-lg outline-none focus:border-green-500"
         />
-        <input
-          type="password"
-          autoComplete="current-password"
-          placeholder="Contraseña"
-          value={clave}
-          onChange={(e) => setClave(e.target.value)}
-          required
-          className="rounded-2xl border-2 border-gray-200 bg-white px-4 py-3 text-lg outline-none focus:border-green-500"
-        />
+        <div className="relative">
+          <input
+            type={mostrar ? 'text' : 'password'}
+            autoComplete="current-password"
+            placeholder="Contraseña"
+            value={clave}
+            onChange={(e) => setClave(e.target.value)}
+            required
+            className="w-full rounded-2xl border-2 border-gray-200 bg-white py-3 pl-4 pr-24 text-lg outline-none focus:border-green-500"
+          />
+          <button
+            type="button"
+            onClick={() => setMostrar(!mostrar)}
+            className="absolute inset-y-0 right-4 text-sm font-bold text-gray-500"
+          >
+            {mostrar ? 'Ocultar' : 'Mostrar'}
+          </button>
+        </div>
 
         {mensaje && (
           <p className="rounded-2xl bg-red-100 px-4 py-3 text-center font-bold text-red-700">

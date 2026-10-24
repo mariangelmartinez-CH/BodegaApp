@@ -61,7 +61,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       email: correo,
       password: clave,
     })
-    return error ? 'Correo o contraseña incorrectos' : null
+    if (!error) return null
+    if (error.code === 'invalid_credentials') return 'Correo o contraseña incorrectos'
+    return `No se pudo entrar: ${error.message}`
   }
 
   async function cerrarSesion() {
