@@ -9,7 +9,7 @@ import ClaveForm from './ClaveForm'
 const etiquetaRol: Record<Rol, string> = {
   admin: 'Administradora',
   operador: 'Operador',
-  observador: 'Solo ver',
+  observador: 'Consulta',
   gestor_pedidos: 'Pedidos',
 }
 

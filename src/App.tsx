@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query'
 import { useEffect } from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router'
 import { AuthProvider } from './auth/AuthProvider'
 import { useAuth } from './auth/context'
 import Layout from './components/Layout'
@@ -33,11 +33,13 @@ function Rutas() {
     return <Login />
   }
 
+  const puedeContar = perfil.rol === 'admin' || perfil.rol === 'operador'
+
   return (
     <Routes>
       <Route element={<Layout />}>
         <Route index element={<Inventario />} />
-        <Route path="conteo" element={<Conteo />} />
+        <Route path="conteo" element={puedeContar ? <Conteo /> : <Navigate to="/" replace />} />
         <Route path="caja" element={<Caja />} />
         <Route path="fiados" element={<Fiados />} />
         <Route path="facturas" element={<Facturas />} />

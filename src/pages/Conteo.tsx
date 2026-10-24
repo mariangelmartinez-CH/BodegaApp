@@ -1,6 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
-import { useAuth } from '../auth/context'
 import ConteoSesion from '../components/ConteoSesion'
 import PageTitle from '../components/PageTitle'
 import { useCierreAbierto, useCierresCerrados, useConteos } from '../data/conteo'
@@ -8,8 +7,6 @@ import { useCategorias, useInventario } from '../data/consultas'
 import { supabase } from '../lib/supabase'
 
 function Conteo() {
-  const { perfil } = useAuth()
-  const puedeContar = perfil?.rol === 'admin' || perfil?.rol === 'operador'
   const cliente = useQueryClient()
   const cierre = useCierreAbierto()
   const cerrados = useCierresCerrados()
@@ -26,17 +23,6 @@ function Conteo() {
     if (fallo) setError(fallo.message)
     await cliente.invalidateQueries({ queryKey: ['cierre-abierto'] })
     setIniciando(false)
-  }
-
-  if (!puedeContar) {
-    return (
-      <>
-        <PageTitle icon="🧮" title="Conteo semanal" subtitle="Lo hace quien lleva la bodega" />
-        <p className="rounded-2xl bg-superficie p-4 text-center font-bold text-suave">
-          Tu usuario es de solo ver. Cuando se cierre una semana, el inventario se actualiza aquí.
-        </p>
-      </>
-    )
   }
 
   const cargando =

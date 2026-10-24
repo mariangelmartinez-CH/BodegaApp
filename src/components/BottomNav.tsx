@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router'
+import { useAuth } from '../auth/context'
 import Icono, { type NombreIcono } from './Icono'
 
 const items: { to: string; label: string; icono: NombreIcono }[] = [
@@ -10,9 +11,13 @@ const items: { to: string; label: string; icono: NombreIcono }[] = [
 ]
 
 function BottomNav() {
+  const { perfil } = useAuth()
+  const puedeContar = perfil?.rol === 'admin' || perfil?.rol === 'operador'
+  const visibles = items.filter((item) => item.to !== '/conteo' || puedeContar)
+
   return (
     <nav className="fixed inset-x-0 bottom-0 z-10 mx-auto flex max-w-md border-t border-borde bg-superficie/95 pb-2 pt-1 backdrop-blur">
-      {items.map((item) => (
+      {visibles.map((item) => (
         <NavLink
           key={item.to}
           to={item.to}
