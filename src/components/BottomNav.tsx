@@ -1,11 +1,11 @@
 import { NavLink } from 'react-router'
 
 const items = [
-  { to: '/', label: 'Vender', icon: '🛒' },
-  { to: '/inventario', label: 'Inventario', icon: '📦' },
+  { to: '/', label: 'Inventario', icon: '📦' },
+  { to: '/conteo', label: 'Conteo', icon: '🧮' },
   { to: '/caja', label: 'Caja', icon: '💰' },
   { to: '/fiados', label: 'Fiados', icon: '📒' },
-  { to: '/facturas', label: 'Facturas', icon: '🧾' },
+  { to: '/facturas', label: 'Pedidos', icon: '🧾' },
 ]
 
 function BottomNav() {

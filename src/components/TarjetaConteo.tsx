@@ -1,0 +1,109 @@
+import { useState, type FormEvent } from 'react'
+import { aTexto, formatoCantidad, formatoPesos, leerNumero } from '../lib/formato'
+import { claseCategoria } from '../lib/colores'
+import type { Categoria, ProductoInventario } from '../types'
+
+type Props = {
+  producto: ProductoInventario
+  categoria: Categoria | undefined
+  contadoActual: number | null
+  guardando: boolean
+  onGuardar: (valor: number) => void
+  onAnterior: () => void
+  onSaltar: () => void
+}
+
+function TarjetaConteo({
+  producto,
+  categoria,
+  contadoActual,
+  guardando,
+  onGuardar,
+  onAnterior,
+  onSaltar,
+}: Props) {
+  const [valor, setValor] = useState(contadoActual === null ? '' : aTexto(contadoActual))
+  const [error, setError] = useState<string | null>(null)
+
+  function enviar(e: FormEvent) {
+    e.preventDefault()
+    const numero = leerNumero(valor)
+    if (numero === null || numero < 0) {
+      setError('Escribe la cantidad que contaste')
+      return
+    }
+    if (!producto.fraccionable && !Number.isInteger(numero)) {
+      setError('Este producto se cuenta en unidades enteras')
+      return
+    }
+    setError(null)
+    onGuardar(numero)
+  }
+
+  return (
+    <form onSubmit={enviar} className="flex flex-col gap-4">
+      <div
+        className={`flex flex-col items-center gap-2 rounded-3xl border-2 border-b-4 p-6 text-center ${claseCategoria(categoria?.color ?? 'green')}`}
+      >
+        <span className="text-6xl">{categoria?.emoji ?? '📦'}</span>
+        <h2 className="text-2xl font-extrabold leading-tight">{producto.nombre}</h2>
+        <p className="text-sm font-bold opacity-70">{formatoPesos(producto.precio_venta)}</p>
+      </div>
+
+      <div className="rounded-2xl bg-white p-4 text-center">
+        <p className="text-sm font-bold text-gray-500">En el sistema hay</p>
+        <p className="text-4xl font-extrabold text-gray-800">
+          {formatoCantidad(producto.stock)}
+          <span className="ml-2 text-base font-bold text-gray-500">
+            {producto.fraccionable ? 'kg' : 'unidades'}
+          </span>
+        </p>
+      </div>
+
+      <label className="flex flex-col gap-1 text-center font-bold text-gray-600">
+        Cuántas contaste
+        <input
+          autoFocus
+          inputMode="decimal"
+          value={valor}
+          onChange={(e) => setValor(e.target.value)}
+          className="w-full rounded-2xl border-2 border-gray-200 bg-white px-4 py-4 text-center text-4xl font-extrabold outline-none focus:border-green-500"
+        />
+      </label>
+
+      {error && (
+        <p className="rounded-2xl bg-red-100 px-4 py-3 text-center font-bold text-red-700">
+          {error}
+        </p>
+      )}
+
+      <button
+        type="button"
+        disabled={guardando}
+        onClick={() => onGuardar(producto.stock)}
+        className="w-full rounded-2xl border-2 border-green-500 bg-white px-6 py-3 text-lg font-bold text-green-700 active:bg-green-50 disabled:opacity-60"
+      >
+        Está igual
+      </button>
+
+      <button
+        type="submit"
+        disabled={guardando}
+        className="w-full rounded-2xl bg-green-500 px-6 py-4 text-xl font-bold text-white shadow-[0_4px_0_0_#15803d] active:translate-y-1 active:shadow-none disabled:opacity-60"
+      >
+        {guardando ? 'Guardando...' : 'Guardar y seguir'}
+      </button>
+
+      <div className="flex justify-between text-lg font-bold text-gray-500">
+        <button type="button" onClick={onAnterior}>
+          Anterior
+        </button>
+        <button type="button" onClick={onSaltar}>
+          Saltar
+        </button>
+      </div>
+    </form>
+  )
+}
+
+export default TarjetaConteo

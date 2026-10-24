@@ -30,3 +30,16 @@ export type ProductoInventario = {
   activo: boolean
   stock: number
 }
+
+export type Cierre = {
+  id: string
+  estado: 'borrador' | 'cerrado'
+  es_inicial: boolean
+  creado_en: string
+}
+
+export type Conteo = {
+  producto_id: string
+  stock_sistema: number
+  stock_contado: number
+}

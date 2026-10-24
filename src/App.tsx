@@ -5,11 +5,11 @@ import { AuthProvider } from './auth/AuthProvider'
 import { useAuth } from './auth/context'
 import Layout from './components/Layout'
 import Caja from './pages/Caja'
+import Conteo from './pages/Conteo'
 import Facturas from './pages/Facturas'
 import Fiados from './pages/Fiados'
 import Inventario from './pages/Inventario'
 import Login from './pages/Login'
-import Vender from './pages/Vender'
 
 const queryClient = new QueryClient()
 
@@ -36,8 +36,8 @@ function Rutas() {
   return (
     <Routes>
       <Route element={<Layout />}>
-        <Route index element={<Vender />} />
-        <Route path="inventario" element={<Inventario />} />
+        <Route index element={<Inventario />} />
+        <Route path="conteo" element={<Conteo />} />
         <Route path="caja" element={<Caja />} />
         <Route path="fiados" element={<Fiados />} />
         <Route path="facturas" element={<Facturas />} />
