@@ -14,7 +14,7 @@ type Props = {
 type Linea = { producto_id: string; paquetes: number }
 
 const campo =
-  'w-full rounded-2xl border-2 border-gray-200 bg-white px-4 py-3 text-lg outline-none focus:border-green-500'
+  'w-full rounded-2xl border border-borde bg-superficie px-4 py-3 text-lg outline-none focus:border-verde'
 
 function PedidoForm({ pedido, onCerrar }: Props) {
   const cliente = useQueryClient()
@@ -152,19 +152,19 @@ function PedidoForm({ pedido, onCerrar }: Props) {
     <div className="fixed inset-0 z-20 flex items-end justify-center bg-black/40">
       <form
         onSubmit={guardar}
-        className="max-h-[92vh] w-full max-w-md overflow-y-auto rounded-t-3xl bg-gray-50 p-5"
+        className="max-h-[92vh] w-full max-w-md overflow-y-auto rounded-t-3xl bg-superficie-2 p-5"
       >
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-2xl font-extrabold text-gray-800">
+          <h2 className="text-2xl font-extrabold text-texto">
             {pedido ? 'Editar pedido' : 'Nuevo pedido'}
           </h2>
-          <button type="button" onClick={onCerrar} className="text-2xl text-gray-400">
+          <button type="button" onClick={onCerrar} className="text-2xl text-suave">
             ✕
           </button>
         </div>
 
         <div className="flex flex-col gap-4">
-          <label className="flex flex-col gap-1 font-bold text-gray-600">
+          <label className="flex flex-col gap-1 font-bold text-suave">
             Distribuidora
             <select
               className={campo}
@@ -191,7 +191,7 @@ function PedidoForm({ pedido, onCerrar }: Props) {
           )}
 
           <div className="grid grid-cols-2 items-end gap-3">
-            <label className="flex flex-col gap-1 font-bold text-gray-600">
+            <label className="flex flex-col gap-1 font-bold text-suave">
               Monto en Bs
               <input
                 className={campo}
@@ -200,7 +200,7 @@ function PedidoForm({ pedido, onCerrar }: Props) {
                 onChange={(e) => setMonto(e.target.value)}
               />
             </label>
-            <label className="flex flex-col gap-1 font-bold text-gray-600">
+            <label className="flex flex-col gap-1 font-bold text-suave">
               Fecha límite
               <input
                 type="date"
@@ -211,7 +211,7 @@ function PedidoForm({ pedido, onCerrar }: Props) {
             </label>
           </div>
 
-          <label className="flex flex-col gap-1 font-bold text-gray-600">
+          <label className="flex flex-col gap-1 font-bold text-suave">
             Nota (opcional)
             <textarea
               rows={2}
@@ -221,9 +221,9 @@ function PedidoForm({ pedido, onCerrar }: Props) {
             />
           </label>
 
-          <div className="rounded-2xl border-2 border-gray-200 bg-white p-3">
-            <p className="font-bold text-gray-600">Productos del pedido (opcional)</p>
-            <p className="mb-2 text-sm text-gray-500">
+          <div className="rounded-2xl border border-borde bg-superficie p-3">
+            <p className="font-bold text-suave">Productos del pedido (opcional)</p>
+            <p className="mb-2 text-sm text-suave">
               Si los pones, el inventario sube solo cuando se marque que el pedido llegó.
             </p>
 
@@ -233,11 +233,11 @@ function PedidoForm({ pedido, onCerrar }: Props) {
                 return (
                   <li
                     key={l.producto_id}
-                    className="flex items-center justify-between gap-2 rounded-xl bg-gray-50 px-3 py-2"
+                    className="flex items-center justify-between gap-2 rounded-xl bg-superficie-2 px-3 py-2"
                   >
                     <div>
-                      <p className="font-bold text-gray-800">{p?.nombre ?? 'Producto'}</p>
-                      <p className="text-xs text-gray-500">
+                      <p className="font-bold text-texto">{p?.nombre ?? 'Producto'}</p>
+                      <p className="text-xs text-suave">
                         {formatoCantidad(l.paquetes)} paquetes
                         {p && ` = ${formatoCantidad(l.paquetes * p.unidades_por_paquete)} unidades`}
                       </p>
@@ -245,7 +245,7 @@ function PedidoForm({ pedido, onCerrar }: Props) {
                     <button
                       type="button"
                       onClick={() => setLineas(lineas.filter((x) => x.producto_id !== l.producto_id))}
-                      className="text-xl text-gray-400"
+                      className="text-xl text-suave"
                     >
                       ✕
                     </button>
@@ -284,7 +284,7 @@ function PedidoForm({ pedido, onCerrar }: Props) {
                 <button
                   type="button"
                   onClick={agregarLinea}
-                  className="rounded-2xl border-2 border-green-500 px-4 font-bold text-green-700 active:bg-green-50"
+                  className="rounded-2xl border border-verde px-4 font-bold text-verde active:bg-superficie-2"
                 >
                   Agregar
                 </button>
@@ -293,7 +293,7 @@ function PedidoForm({ pedido, onCerrar }: Props) {
           </div>
 
           {error && (
-            <p className="rounded-2xl bg-red-100 px-4 py-3 text-center font-bold text-red-700">
+            <p className="rounded-2xl bg-red-500/15 px-4 py-3 text-center font-bold text-red-300">
               {error}
             </p>
           )}
@@ -301,7 +301,7 @@ function PedidoForm({ pedido, onCerrar }: Props) {
           <button
             type="submit"
             disabled={guardando}
-            className="w-full rounded-2xl bg-green-500 px-6 py-4 text-xl font-bold text-white shadow-[0_4px_0_0_#15803d] active:translate-y-1 active:shadow-none disabled:opacity-60"
+            className="w-full rounded-2xl bg-verde px-6 py-4 text-xl font-bold text-fondo active:scale-[0.98] disabled:opacity-60"
           >
             {guardando ? 'Guardando...' : 'Guardar pedido'}
           </button>

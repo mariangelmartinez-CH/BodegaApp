@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../auth/context'
+import Icono from '../components/Icono'
 import PageTitle from '../components/PageTitle'
 import ProductoForm from '../components/ProductoForm'
 import { useCategorias, useInventario } from '../data/consultas'
@@ -25,20 +26,29 @@ function FilaProducto({
       <button
         disabled={!puedeEditar}
         onClick={() => onEditar(p)}
-        className="flex w-full items-center justify-between gap-3 rounded-2xl border-2 border-b-4 border-gray-200 bg-white p-4 text-left active:translate-y-0.5"
+        className="flex w-full items-center justify-between gap-3 rounded-xl border border-borde bg-superficie px-4 py-3.5 text-left transition-colors active:bg-superficie-2"
       >
-        <p className="text-lg font-extrabold text-gray-800">
+        <p className="font-medium text-texto">
           {emoji && <span className="mr-2">{emoji}</span>}
           {p.nombre}
         </p>
-        <div className="text-right">
-          <p className={`text-2xl font-extrabold ${bajo ? 'text-red-600' : 'text-green-700'}`}>
+        <div className="shrink-0 text-right">
+          <p className={`text-xl font-semibold ${bajo ? 'text-red-400' : 'text-verde'}`}>
             {formatoCantidad(p.stock)}
           </p>
-          <p className="text-xs font-bold text-gray-500">{p.fraccionable ? 'kg' : 'unidades'}</p>
+          <p className="text-xs text-suave">{p.fraccionable ? 'kg' : 'unidades'}</p>
         </div>
       </button>
     </li>
+  )
+}
+
+function Resumen({ etiqueta, valor, alerta }: { etiqueta: string; valor: number; alerta?: boolean }) {
+  return (
+    <div className="flex-1 rounded-xl border border-borde bg-superficie px-4 py-3">
+      <p className="text-xs text-suave">{etiqueta}</p>
+      <p className={`text-2xl font-semibold ${alerta ? 'text-red-400' : 'text-texto'}`}>{valor}</p>
+    </div>
   )
 }
 
@@ -52,12 +62,12 @@ function Inventario() {
   const [editando, setEditando] = useState<ProductoInventario | 'nuevo' | null>(null)
 
   if (categorias.isLoading || inventario.isLoading) {
-    return <p className="py-10 text-center font-bold text-gray-500">Cargando...</p>
+    return <p className="py-10 text-center text-suave">Cargando...</p>
   }
 
   if (categorias.error || inventario.error) {
     return (
-      <p className="py-10 text-center font-bold text-red-600">
+      <p className="py-10 text-center font-medium text-red-400">
         No se pudo cargar el inventario. Revisa la conexión.
       </p>
     )
@@ -68,17 +78,28 @@ function Inventario() {
   const categoriaActual = lista.find((c) => c.id === categoriaId) ?? null
   const faltan = productos.filter((p) => p.stock <= p.stock_minimo)
 
+  const volver = (
+    <button
+      onClick={() => {
+        setSoloFalta(false)
+        setCategoriaId(null)
+      }}
+      className="mb-4 flex items-center gap-1 text-sm font-medium text-azul"
+    >
+      <Icono nombre="flecha" className="h-4 w-4 rotate-180" />
+      Categorías
+    </button>
+  )
+
   if (soloFalta) {
     return (
       <>
-        <button onClick={() => setSoloFalta(false)} className="mb-2 text-lg font-bold text-green-700">
-          ← Categorías
-        </button>
-        <h1 className="mb-1 text-2xl font-extrabold text-gray-800">Lo que falta</h1>
-        <p className="mb-4 text-sm text-gray-500">
+        {volver}
+        <h1 className="text-xl font-semibold tracking-tight text-texto">Lo que falta</h1>
+        <p className="mb-4 mt-1 text-sm text-suave">
           Productos sin stock o por debajo del mínimo ({faltan.length}).
         </p>
-        <ul className="flex flex-col gap-3">
+        <ul className="flex flex-col gap-2">
           {faltan.map((p) => (
             <FilaProducto
               key={p.id}
@@ -104,36 +125,56 @@ function Inventario() {
   if (!categoriaActual) {
     return (
       <>
-        <PageTitle icon="📦" title="Inventario" subtitle="Qué hay y qué no hay" />
+        <PageTitle title="Inventario" subtitle="Qué hay y qué no hay en la bodega" />
+
+        <div className="mb-3 flex gap-3">
+          <Resumen etiqueta="Productos" valor={productos.length} />
+          <Resumen etiqueta="Sin stock" valor={faltan.length} alerta={faltan.length > 0} />
+        </div>
+
         <button
           onClick={() => setSoloFalta(true)}
-          className="mb-4 flex w-full items-center justify-between rounded-2xl border-2 border-red-200 bg-red-50 px-4 py-3 font-extrabold text-red-700 active:bg-red-100"
+          className="mb-6 flex w-full items-center justify-between rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-left font-medium text-red-300 active:bg-red-500/20"
         >
           <span>Ver lo que falta</span>
-          <span className="rounded-full bg-red-500 px-3 py-1 text-sm text-white">{faltan.length}</span>
+          <Icono nombre="flecha" className="h-5 w-5" />
         </button>
-        <div className="grid grid-cols-2 gap-3">
+
+        <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-suave">
+          Categorías
+        </h2>
+        <ul className="flex flex-col gap-2">
           {lista.map((c) => {
             const deCategoria = productos.filter((p) => p.categoria_id === c.id)
             const bajos = deCategoria.filter((p) => p.stock <= p.stock_minimo).length
             return (
-              <button
-                key={c.id}
-                onClick={() => setCategoriaId(c.id)}
-                className={`flex flex-col items-center gap-1 rounded-3xl border-2 border-b-4 p-4 active:translate-y-0.5 ${claseCategoria(c.color)}`}
-              >
-                <span className="text-5xl">{c.emoji}</span>
-                <span className="text-center font-extrabold leading-tight">{c.nombre}</span>
-                <span className="text-xs font-bold opacity-70">{deCategoria.length} productos</span>
-                {bajos > 0 && (
-                  <span className="rounded-full bg-red-500 px-2 py-0.5 text-xs font-bold text-white">
-                    {bajos} sin stock
+              <li key={c.id}>
+                <button
+                  onClick={() => setCategoriaId(c.id)}
+                  className="flex w-full items-center gap-3 rounded-xl border border-borde bg-superficie p-3 text-left transition-colors active:bg-superficie-2"
+                >
+                  <span
+                    className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border text-2xl ${claseCategoria(c.color)}`}
+                  >
+                    {c.emoji}
                   </span>
-                )}
-              </button>
+                  <span className="flex-1">
+                    <span className="block font-medium text-texto">{c.nombre}</span>
+                    <span className="block text-sm text-suave">
+                      {deCategoria.length} productos
+                    </span>
+                  </span>
+                  {bajos > 0 && (
+                    <span className="rounded-full bg-red-500/15 px-2.5 py-1 text-xs font-medium text-red-300">
+                      {bajos} sin stock
+                    </span>
+                  )}
+                  <Icono nombre="flecha" className="h-5 w-5 shrink-0 text-suave" />
+                </button>
+              </li>
             )
           })}
-        </div>
+        </ul>
       </>
     )
   }
@@ -142,18 +183,23 @@ function Inventario() {
 
   return (
     <>
-      <button onClick={() => setCategoriaId(null)} className="mb-2 text-lg font-bold text-green-700">
-        ← Categorías
-      </button>
+      {volver}
 
-      <div
-        className={`mb-4 flex items-center gap-3 rounded-3xl border-2 p-4 ${claseCategoria(categoriaActual.color)}`}
-      >
-        <span className="text-4xl">{categoriaActual.emoji}</span>
-        <h1 className="text-2xl font-extrabold">{categoriaActual.nombre}</h1>
+      <div className="mb-5 flex items-center gap-3">
+        <span
+          className={`flex h-12 w-12 items-center justify-center rounded-lg border text-2xl ${claseCategoria(categoriaActual.color)}`}
+        >
+          {categoriaActual.emoji}
+        </span>
+        <div>
+          <h1 className="text-xl font-semibold tracking-tight text-texto">
+            {categoriaActual.nombre}
+          </h1>
+          <p className="text-sm text-suave">{deCategoria.length} productos</p>
+        </div>
       </div>
 
-      <ul className="flex flex-col gap-3">
+      <ul className="flex flex-col gap-2">
         {deCategoria.map((p) => (
           <FilaProducto key={p.id} p={p} puedeEditar={puedeEditar} onEditar={setEditando} />
         ))}
@@ -162,7 +208,7 @@ function Inventario() {
       {puedeEditar && (
         <button
           onClick={() => setEditando('nuevo')}
-          className="mt-4 w-full rounded-2xl bg-green-500 px-6 py-4 text-xl font-bold text-white shadow-[0_4px_0_0_#15803d] active:translate-y-1 active:shadow-none"
+          className="mt-4 w-full rounded-xl bg-verde px-6 py-3.5 text-base font-semibold text-fondo active:scale-[0.98]"
         >
           + Agregar producto
         </button>

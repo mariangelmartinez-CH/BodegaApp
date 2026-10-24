@@ -99,8 +99,8 @@ function ConteoSesion({ cierre, productos, categorias, conteos, esPrimero }: Pro
     return (
       <div className="flex flex-col items-center gap-3 py-10 text-center">
         <div className="text-7xl">✅</div>
-        <h2 className="text-2xl font-extrabold text-gray-800">Semana cerrada</h2>
-        <p className="text-gray-500">El inventario quedó actualizado con tu conteo.</p>
+        <h2 className="text-2xl font-extrabold text-texto">Semana cerrada</h2>
+        <p className="text-suave">El inventario quedó actualizado con tu conteo.</p>
       </div>
     )
   }
@@ -120,35 +120,35 @@ function ConteoSesion({ cierre, productos, categorias, conteos, esPrimero }: Pro
       <div className="flex flex-col gap-4">
         <div className="text-center">
           <div className="text-6xl">🧮</div>
-          <h2 className="mt-2 text-2xl font-extrabold text-gray-800">Resumen del conteo</h2>
+          <h2 className="mt-2 text-2xl font-extrabold text-texto">Resumen del conteo</h2>
         </div>
 
-        <div className="rounded-2xl bg-white p-4">
-          <p className="font-bold text-gray-600">
+        <div className="rounded-2xl bg-superficie p-4">
+          <p className="font-bold text-suave">
             Contaste {contados.size} de {productos.length} productos
           </p>
           {sinContar.length > 0 && (
-            <p className="mt-1 text-sm font-bold text-orange-600">
+            <p className="mt-1 text-sm font-bold text-orange-400">
               Faltan {sinContar.length} por contar. Los que no cuentes no cambian.
             </p>
           )}
         </div>
 
         {esPrimero ? (
-          <p className="rounded-2xl bg-green-100 px-4 py-3 text-sm font-bold text-green-800">
+          <p className="rounded-2xl bg-verde/15 px-4 py-3 text-sm font-bold text-verde">
             Es el primer conteo: se carga como inventario inicial y no cuenta como ventas.
           </p>
         ) : (
-          <div className="rounded-2xl bg-white p-4">
-            <p className="text-sm font-bold text-gray-500">Se vendieron esta semana</p>
-            <p className="text-3xl font-extrabold text-green-700">
+          <div className="rounded-2xl bg-superficie p-4">
+            <p className="text-sm font-bold text-suave">Se vendieron esta semana</p>
+            <p className="text-3xl font-extrabold text-verde">
               {formatoCantidad(totalUnidades)} unidades
             </p>
-            <p className="text-sm text-gray-500">{vendidas.length} productos con ventas</p>
+            <p className="text-sm text-suave">{vendidas.length} productos con ventas</p>
             {masVendidos.length > 0 && (
-              <ul className="mt-3 flex flex-col gap-1 border-t border-gray-100 pt-3">
+              <ul className="mt-3 flex flex-col gap-1 border-t border-borde pt-3">
                 {masVendidos.map((v) => (
-                  <li key={v.producto.id} className="flex justify-between text-sm font-bold text-gray-600">
+                  <li key={v.producto.id} className="flex justify-between text-sm font-bold text-suave">
                     <span>{v.producto.nombre}</span>
                     <span>{formatoCantidad(v.unidades)}</span>
                   </li>
@@ -158,18 +158,18 @@ function ConteoSesion({ cierre, productos, categorias, conteos, esPrimero }: Pro
           </div>
         )}
 
-        <label className="flex flex-col gap-1 text-center font-bold text-gray-600">
+        <label className="flex flex-col gap-1 text-center font-bold text-suave">
           Efectivo en pesos que hay hoy en caja
           <input
             inputMode="decimal"
             value={efectivo}
             onChange={(e) => setEfectivo(e.target.value)}
-            className="w-full rounded-2xl border-2 border-gray-200 bg-white px-4 py-4 text-center text-3xl font-extrabold outline-none focus:border-green-500"
+            className="w-full rounded-2xl border border-borde bg-superficie px-4 py-4 text-center text-3xl font-extrabold outline-none focus:border-verde"
           />
         </label>
 
         {error && (
-          <p className="rounded-2xl bg-red-100 px-4 py-3 text-center font-bold text-red-700">
+          <p className="rounded-2xl bg-red-500/15 px-4 py-3 text-center font-bold text-red-300">
             {error}
           </p>
         )}
@@ -177,14 +177,14 @@ function ConteoSesion({ cierre, productos, categorias, conteos, esPrimero }: Pro
         <button
           onClick={cerrarSemana}
           disabled={guardando}
-          className="w-full rounded-2xl bg-green-500 px-6 py-4 text-xl font-bold text-white shadow-[0_4px_0_0_#15803d] active:translate-y-1 active:shadow-none disabled:opacity-60"
+          className="w-full rounded-2xl bg-verde px-6 py-4 text-xl font-bold text-fondo active:scale-[0.98] disabled:opacity-60"
         >
           {guardando ? 'Cerrando...' : 'Cerrar la semana'}
         </button>
 
         <button
           onClick={() => setResumen(false)}
-          className="text-center text-lg font-bold text-gray-500"
+          className="text-center text-lg font-bold text-suave"
         >
           Seguir contando
         </button>
@@ -195,15 +195,15 @@ function ConteoSesion({ cierre, productos, categorias, conteos, esPrimero }: Pro
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <div className="mb-1 flex justify-between text-sm font-bold text-gray-500">
+        <div className="mb-1 flex justify-between text-sm font-bold text-suave">
           <span>
             {indice + 1} de {productos.length}
           </span>
           <span>{contados.size} contados</span>
         </div>
-        <div className="h-3 overflow-hidden rounded-full bg-gray-200">
+        <div className="h-3 overflow-hidden rounded-full bg-borde">
           <div
-            className="h-full rounded-full bg-green-500"
+            className="h-full rounded-full bg-verde"
             style={{ width: `${(contados.size / productos.length) * 100}%` }}
           />
         </div>
@@ -212,7 +212,7 @@ function ConteoSesion({ cierre, productos, categorias, conteos, esPrimero }: Pro
       <select
         value={producto.categoria_id}
         onChange={(e) => irACategoria(e.target.value)}
-        className="rounded-2xl border-2 border-gray-200 bg-white px-3 py-2 font-bold text-gray-600"
+        className="rounded-2xl border border-borde bg-superficie px-3 py-2 font-bold text-suave"
       >
         {categorias.map((c) => (
           <option key={c.id} value={c.id}>
@@ -222,7 +222,7 @@ function ConteoSesion({ cierre, productos, categorias, conteos, esPrimero }: Pro
       </select>
 
       {error && (
-        <p className="rounded-2xl bg-red-100 px-4 py-3 text-center font-bold text-red-700">
+        <p className="rounded-2xl bg-red-500/15 px-4 py-3 text-center font-bold text-red-300">
           {error}
         </p>
       )}
@@ -240,7 +240,7 @@ function ConteoSesion({ cierre, productos, categorias, conteos, esPrimero }: Pro
 
       <button
         onClick={() => setResumen(true)}
-        className="text-center text-lg font-bold text-green-700"
+        className="text-center text-lg font-bold text-verde"
       >
         Terminar y ver el resumen
       </button>

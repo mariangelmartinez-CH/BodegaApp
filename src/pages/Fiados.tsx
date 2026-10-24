@@ -28,25 +28,25 @@ function GrupoCliente({
   const total = lineas.reduce((suma, f) => suma + f.saldo, 0)
 
   return (
-    <li className="rounded-2xl border-2 border-b-4 border-gray-200 bg-white p-4">
+    <li className="rounded-2xl border border-borde bg-superficie p-4">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-lg font-extrabold text-gray-800">{nombre}</p>
-        <p className="text-xl font-extrabold text-red-600">{formatoPesos(total)}</p>
+        <p className="text-lg font-extrabold text-texto">{nombre}</p>
+        <p className="text-xl font-extrabold text-red-400">{formatoPesos(total)}</p>
       </div>
 
       <ul className="mt-3 flex flex-col gap-2">
         {lineas.map((f) => (
-          <li key={f.id} className="flex items-center justify-between gap-2 rounded-xl bg-gray-50 px-3 py-2">
+          <li key={f.id} className="flex items-center justify-between gap-2 rounded-xl bg-superficie-2 px-3 py-2">
             <div>
-              <p className="font-bold text-gray-700">
+              <p className="font-bold text-texto">
                 {formatoPesos(f.saldo)}
                 {f.pagado > 0 && (
-                  <span className="ml-2 text-xs font-normal text-gray-500">
+                  <span className="ml-2 text-xs font-normal text-suave">
                     de {formatoPesos(f.monto)}
                   </span>
                 )}
               </p>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-suave">
                 {textoFecha(f.fecha)}
                 {f.nota && `, ${f.nota}`}
               </p>
@@ -54,7 +54,7 @@ function GrupoCliente({
             {puedeRegistrar && (
               <button
                 onClick={() => onPagar(f)}
-                className="rounded-2xl bg-green-500 px-4 py-2 text-sm font-bold text-white shadow-[0_3px_0_0_#15803d] active:translate-y-0.5 active:shadow-none"
+                className="rounded-2xl bg-verde px-4 py-2 text-sm font-bold text-fondo active:scale-[0.98]"
               >
                 Pagó
               </button>
@@ -74,12 +74,12 @@ function Fiados() {
   const [pagando, setPagando] = useState<Fiado | null>(null)
 
   if (fiados.isLoading) {
-    return <p className="py-10 text-center font-bold text-gray-500">Cargando...</p>
+    return <p className="py-10 text-center font-bold text-suave">Cargando...</p>
   }
 
   if (fiados.error) {
     return (
-      <p className="py-10 text-center font-bold text-red-600">
+      <p className="py-10 text-center font-bold text-red-400">
         No se pudieron cargar los fiados. ¿Ya corriste el archivo 0010 en Supabase?
       </p>
     )
@@ -97,22 +97,22 @@ function Fiados() {
     <>
       <PageTitle icon="📒" title="Fiados" subtitle="Quién debe y cuánto" />
 
-      <div className="mb-4 rounded-3xl border-2 border-b-4 border-red-200 bg-red-50 p-4 text-center">
-        <p className="text-sm font-bold text-red-700">Te deben en total</p>
-        <p className="text-3xl font-extrabold text-red-700">{formatoPesos(total)}</p>
+      <div className="mb-4 rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-center">
+        <p className="text-sm font-bold text-red-300">Te deben en total</p>
+        <p className="text-3xl font-extrabold text-red-300">{formatoPesos(total)}</p>
       </div>
 
       {puedeRegistrar && (
         <button
           onClick={() => setNuevo(true)}
-          className="mb-6 w-full rounded-2xl bg-green-500 px-6 py-4 text-xl font-bold text-white shadow-[0_4px_0_0_#15803d] active:translate-y-1 active:shadow-none"
+          className="mb-6 w-full rounded-2xl bg-verde px-6 py-4 text-xl font-bold text-fondo active:scale-[0.98]"
         >
           + Nuevo fiado
         </button>
       )}
 
       {grupos.length === 0 && (
-        <p className="rounded-2xl bg-white p-4 text-center font-bold text-gray-500">
+        <p className="rounded-2xl bg-superficie p-4 text-center font-bold text-suave">
           Nadie debe nada.
         </p>
       )}

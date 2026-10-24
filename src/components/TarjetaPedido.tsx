@@ -28,44 +28,44 @@ export function TarjetaPedido({ p, ...acciones }: { p: Pedido } & Acciones) {
   const urgente = !p.pagado && dias !== null && dias <= 2
 
   return (
-    <li className="rounded-2xl border-2 border-b-4 border-gray-200 bg-white p-4">
+    <li className="rounded-2xl border border-borde bg-superficie p-4">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-lg font-extrabold text-gray-800">
+          <p className="text-lg font-extrabold text-texto">
             {p.suppliers?.nombre ?? 'Distribuidora'}
           </p>
           {p.fecha_limite && (
-            <p className={`text-sm font-bold ${urgente ? 'text-red-600' : 'text-gray-500'}`}>
+            <p className={`text-sm font-bold ${urgente ? 'text-red-400' : 'text-suave'}`}>
               {dias !== null && dias < 0 ? 'Venció' : 'Vence'} el {textoFecha(p.fecha_limite)}
             </p>
           )}
         </div>
-        <p className="text-xl font-extrabold text-gray-800">Bs {formatoCantidad(p.monto_bs)}</p>
+        <p className="text-xl font-extrabold text-texto">Bs {formatoCantidad(p.monto_bs)}</p>
       </div>
 
       <div className="mt-2 flex flex-wrap gap-2">
         <span
           className={`rounded-full px-3 py-1 text-xs font-bold ${
-            p.pagado ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+            p.pagado ? 'bg-verde/15 text-verde' : 'bg-red-500/15 text-red-300'
           }`}
         >
           {p.pagado ? 'Pagado' : 'No pagado'}
         </span>
         <span
           className={`rounded-full px-3 py-1 text-xs font-bold ${
-            p.recibido ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'
+            p.recibido ? 'bg-verde/15 text-verde' : 'bg-orange-500/15 text-orange-300'
           }`}
         >
           {p.recibido ? 'Recibido' : 'Por llegar'}
         </span>
         {p.order_items.length > 0 && (
-          <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-bold text-gray-600">
+          <span className="rounded-full bg-superficie-2 px-3 py-1 text-xs font-bold text-suave">
             {p.order_items.length} productos
           </span>
         )}
       </div>
 
-      {p.detalle && <p className="mt-2 text-sm text-gray-500">{p.detalle}</p>}
+      {p.detalle && <p className="mt-2 text-sm text-suave">{p.detalle}</p>}
 
       <div className="mt-3 flex flex-wrap gap-2">
         {acciones.puedeGestionar && (
@@ -73,8 +73,8 @@ export function TarjetaPedido({ p, ...acciones }: { p: Pedido } & Acciones) {
             onClick={() => acciones.onPagado(p)}
             className={`rounded-2xl px-4 py-2 font-bold ${
               p.pagado
-                ? 'border-2 border-gray-200 text-gray-500'
-                : 'bg-green-500 text-white shadow-[0_3px_0_0_#15803d] active:translate-y-0.5 active:shadow-none'
+                ? 'border border-borde text-suave'
+                : 'bg-verde text-fondo  active:scale-[0.98]'
             }`}
           >
             {p.pagado ? 'Quitar pagado' : 'Marcar pagado'}
@@ -83,7 +83,7 @@ export function TarjetaPedido({ p, ...acciones }: { p: Pedido } & Acciones) {
         {acciones.puedeRecibir && !p.recibido && (
           <button
             onClick={() => acciones.onRecibir(p)}
-            className="rounded-2xl bg-blue-500 px-4 py-2 font-bold text-white shadow-[0_3px_0_0_#1d4ed8] active:translate-y-0.5 active:shadow-none"
+            className="rounded-2xl bg-azul px-4 py-2 font-bold text-fondo active:scale-[0.98]"
           >
             Llegó a la bodega
           </button>
@@ -91,7 +91,7 @@ export function TarjetaPedido({ p, ...acciones }: { p: Pedido } & Acciones) {
         {acciones.puedeGestionar && !p.recibido && (
           <button
             onClick={() => acciones.onEditar(p)}
-            className="rounded-2xl border-2 border-gray-200 px-4 py-2 font-bold text-gray-500"
+            className="rounded-2xl border border-borde px-4 py-2 font-bold text-suave"
           >
             Editar
           </button>
@@ -110,7 +110,7 @@ export function GrupoPedidos({
 
   return (
     <section className="mb-6">
-      <h2 className="mb-2 text-lg font-extrabold text-gray-700">{titulo}</h2>
+      <h2 className="mb-2 text-lg font-extrabold text-texto">{titulo}</h2>
       <ul className="flex flex-col gap-3">
         {items.map((p) => (
           <TarjetaPedido key={p.id} p={p} {...acciones} />

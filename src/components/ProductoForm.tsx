@@ -11,7 +11,7 @@ type Props = {
 }
 
 const campo =
-  'w-full rounded-2xl border-2 border-gray-200 bg-white px-4 py-3 text-lg outline-none focus:border-green-500'
+  'w-full rounded-2xl border border-borde bg-superficie px-4 py-3 text-lg outline-none focus:border-verde'
 
 function ProductoForm({ producto, categoriaId, onCerrar }: Props) {
   const queryClient = useQueryClient()
@@ -92,25 +92,25 @@ function ProductoForm({ producto, categoriaId, onCerrar }: Props) {
     <div className="fixed inset-0 z-20 flex items-end justify-center bg-black/40">
       <form
         onSubmit={guardar}
-        className="max-h-[92vh] w-full max-w-md overflow-y-auto rounded-t-3xl bg-gray-50 p-5"
+        className="max-h-[92vh] w-full max-w-md overflow-y-auto rounded-t-3xl bg-superficie-2 p-5"
       >
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-2xl font-extrabold text-gray-800">
+          <h2 className="text-2xl font-extrabold text-texto">
             {producto ? 'Editar producto' : 'Nuevo producto'}
           </h2>
-          <button type="button" onClick={onCerrar} className="text-2xl text-gray-400">
+          <button type="button" onClick={onCerrar} className="text-2xl text-suave">
             ✕
           </button>
         </div>
 
         <div className="flex flex-col gap-4">
-          <label className="flex flex-col gap-1 font-bold text-gray-600">
+          <label className="flex flex-col gap-1 font-bold text-suave">
             Nombre
             <input className={campo} value={nombre} onChange={(e) => setNombre(e.target.value)} />
           </label>
 
           <div className="grid grid-cols-2 items-end gap-3">
-            <label className="flex flex-col gap-1 font-bold text-gray-600">
+            <label className="flex flex-col gap-1 font-bold text-suave">
               Cantidad hoy
               <input
                 className={campo}
@@ -119,7 +119,7 @@ function ProductoForm({ producto, categoriaId, onCerrar }: Props) {
                 onChange={(e) => setStockContado(e.target.value)}
               />
             </label>
-            <label className="flex flex-col gap-1 font-bold text-gray-600">
+            <label className="flex flex-col gap-1 font-bold text-suave">
               Avisar si baja de
               <input
                 className={campo}
@@ -130,12 +130,12 @@ function ProductoForm({ producto, categoriaId, onCerrar }: Props) {
             </label>
           </div>
 
-          <p className="-mt-2 text-sm text-gray-500">
+          <p className="-mt-2 text-sm text-suave">
             La cantidad se cuenta en {fraccionable ? 'kilos' : 'unidades'}.
           </p>
 
           {error && (
-            <p className="rounded-2xl bg-red-100 px-4 py-3 text-center font-bold text-red-700">
+            <p className="rounded-2xl bg-red-500/15 px-4 py-3 text-center font-bold text-red-300">
               {error}
             </p>
           )}
@@ -143,7 +143,7 @@ function ProductoForm({ producto, categoriaId, onCerrar }: Props) {
           <button
             type="submit"
             disabled={guardando}
-            className="w-full rounded-2xl bg-green-500 px-6 py-4 text-xl font-bold text-white shadow-[0_4px_0_0_#15803d] active:translate-y-1 active:shadow-none disabled:opacity-60"
+            className="w-full rounded-2xl bg-verde px-6 py-4 text-xl font-bold text-fondo active:scale-[0.98] disabled:opacity-60"
           >
             {guardando ? 'Guardando...' : 'Guardar'}
           </button>

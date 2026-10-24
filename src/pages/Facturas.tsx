@@ -44,12 +44,12 @@ function Facturas() {
   }
 
   if (pedidos.isLoading) {
-    return <p className="py-10 text-center font-bold text-gray-500">Cargando...</p>
+    return <p className="py-10 text-center font-bold text-suave">Cargando...</p>
   }
 
   if (pedidos.error) {
     return (
-      <p className="py-10 text-center font-bold text-red-600">
+      <p className="py-10 text-center font-bold text-red-400">
         No se pudieron cargar los pedidos. ¿Ya corriste los archivos 0010 y 0011 en Supabase?
       </p>
     )
@@ -71,20 +71,20 @@ function Facturas() {
       {puedeGestionar && (
         <button
           onClick={() => setEditando('nuevo')}
-          className="mb-6 w-full rounded-2xl bg-green-500 px-6 py-4 text-xl font-bold text-white shadow-[0_4px_0_0_#15803d] active:translate-y-1 active:shadow-none"
+          className="mb-6 w-full rounded-2xl bg-verde px-6 py-4 text-xl font-bold text-fondo active:scale-[0.98]"
         >
           + Nuevo pedido
         </button>
       )}
 
       {error && (
-        <p className="mb-4 rounded-2xl bg-red-100 px-4 py-3 text-center font-bold text-red-700">
+        <p className="mb-4 rounded-2xl bg-red-500/15 px-4 py-3 text-center font-bold text-red-300">
           {error}
         </p>
       )}
 
       {lista.length === 0 && (
-        <p className="rounded-2xl bg-white p-4 text-center font-bold text-gray-500">
+        <p className="rounded-2xl bg-superficie p-4 text-center font-bold text-suave">
           Todavía no hay pedidos.
         </p>
       )}

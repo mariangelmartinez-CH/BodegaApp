@@ -7,7 +7,7 @@ import BottomNav from './BottomNav'
 import ClaveForm from './ClaveForm'
 
 const etiquetaRol: Record<Rol, string> = {
-  admin: 'Admin',
+  admin: 'Administradora',
   operador: 'Operador',
   observador: 'Solo ver',
   gestor_pedidos: 'Pedidos',
@@ -18,31 +18,36 @@ function Layout() {
   const [cambiandoClave, setCambiandoClave] = useState(false)
   useTiempoReal()
 
+  const inicial = perfil?.nombre.trim().charAt(0).toUpperCase() ?? ''
+
   return (
     <div className="mx-auto flex min-h-screen max-w-md flex-col">
-      <header className="flex items-center justify-between border-b-2 border-gray-200 bg-white px-4 py-3">
-        <div>
-          <p className="font-extrabold text-gray-800">{perfil?.nombre}</p>
-          <p className="text-xs font-bold text-green-700">
-            {perfil ? etiquetaRol[perfil.rol] : ''}
-          </p>
+      <header className="sticky top-0 z-10 flex items-center justify-between border-b border-borde bg-fondo/90 px-4 py-3 backdrop-blur">
+        <div className="flex items-center gap-3">
+          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-azul/15 text-base font-semibold text-azul">
+            {inicial}
+          </span>
+          <div className="leading-tight">
+            <p className="font-semibold text-texto">{perfil?.nombre}</p>
+            <p className="text-xs text-suave">{perfil ? etiquetaRol[perfil.rol] : ''}</p>
+          </div>
         </div>
         <div className="flex gap-2">
           <button
             onClick={() => setCambiandoClave(true)}
-            className="rounded-2xl border-2 border-gray-200 px-3 py-1 text-sm font-bold text-gray-500 active:bg-gray-100"
+            className="rounded-lg border border-borde px-3 py-1.5 text-sm font-medium text-suave active:bg-superficie-2"
           >
             Clave
           </button>
           <button
             onClick={cerrarSesion}
-            className="rounded-2xl border-2 border-gray-200 px-3 py-1 text-sm font-bold text-gray-500 active:bg-gray-100"
+            className="rounded-lg border border-borde px-3 py-1.5 text-sm font-medium text-suave active:bg-superficie-2"
           >
             Salir
           </button>
         </div>
       </header>
-      <main className="flex-1 p-4 pb-28">
+      <main className="flex-1 px-4 pb-28 pt-5">
         <Outlet />
       </main>
       <BottomNav />

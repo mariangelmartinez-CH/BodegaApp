@@ -1,28 +1,29 @@
 import { NavLink } from 'react-router'
+import Icono, { type NombreIcono } from './Icono'
 
-const items = [
-  { to: '/', label: 'Inventario', icon: '📦' },
-  { to: '/conteo', label: 'Conteo', icon: '🧮' },
-  { to: '/caja', label: 'Caja', icon: '💰' },
-  { to: '/fiados', label: 'Fiados', icon: '📒' },
-  { to: '/facturas', label: 'Pedidos', icon: '🧾' },
+const items: { to: string; label: string; icono: NombreIcono }[] = [
+  { to: '/', label: 'Inventario', icono: 'inventario' },
+  { to: '/conteo', label: 'Conteo', icono: 'conteo' },
+  { to: '/caja', label: 'Caja', icono: 'caja' },
+  { to: '/fiados', label: 'Fiados', icono: 'fiados' },
+  { to: '/facturas', label: 'Pedidos', icono: 'pedidos' },
 ]
 
 function BottomNav() {
   return (
-    <nav className="fixed inset-x-0 bottom-0 mx-auto flex max-w-md justify-around border-t-2 border-gray-200 bg-white px-1 pb-2 pt-1">
+    <nav className="fixed inset-x-0 bottom-0 z-10 mx-auto flex max-w-md border-t border-borde bg-superficie/95 pb-2 pt-1 backdrop-blur">
       {items.map((item) => (
         <NavLink
           key={item.to}
           to={item.to}
           end
           className={({ isActive }) =>
-            `flex flex-1 flex-col items-center rounded-2xl py-1 text-xs font-bold ${
-              isActive ? 'bg-green-100 text-green-700' : 'text-gray-500'
+            `flex flex-1 flex-col items-center gap-0.5 py-1.5 text-[11px] font-medium transition-colors ${
+              isActive ? 'text-verde' : 'text-suave'
             }`
           }
         >
-          <span className="text-2xl">{item.icon}</span>
+          <Icono nombre={item.icono} className="h-6 w-6" />
           {item.label}
         </NavLink>
       ))}

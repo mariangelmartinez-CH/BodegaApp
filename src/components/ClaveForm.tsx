@@ -6,7 +6,7 @@ type Props = {
 }
 
 const campo =
-  'w-full rounded-2xl border-2 border-gray-200 bg-white px-4 py-3 text-lg outline-none focus:border-green-500'
+  'w-full rounded-2xl border border-borde bg-superficie px-4 py-3 text-lg outline-none focus:border-verde'
 
 function ClaveForm({ onCerrar }: Props) {
   const [clave, setClave] = useState('')
@@ -40,10 +40,10 @@ function ClaveForm({ onCerrar }: Props) {
 
   return (
     <div className="fixed inset-0 z-20 flex items-end justify-center bg-black/40">
-      <form onSubmit={guardar} className="w-full max-w-md rounded-t-3xl bg-gray-50 p-5">
+      <form onSubmit={guardar} className="w-full max-w-md rounded-t-3xl bg-superficie-2 p-5">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-2xl font-extrabold text-gray-800">Cambiar contraseña</h2>
-          <button type="button" onClick={onCerrar} className="text-2xl text-gray-400">
+          <h2 className="text-2xl font-extrabold text-texto">Cambiar contraseña</h2>
+          <button type="button" onClick={onCerrar} className="text-2xl text-suave">
             ✕
           </button>
         </div>
@@ -51,11 +51,11 @@ function ClaveForm({ onCerrar }: Props) {
         {listo ? (
           <div className="flex flex-col items-center gap-3 py-4 text-center">
             <div className="text-6xl">✅</div>
-            <p className="font-bold text-gray-700">Tu contraseña ya cambió.</p>
+            <p className="font-bold text-texto">Tu contraseña ya cambió.</p>
             <button
               type="button"
               onClick={onCerrar}
-              className="w-full rounded-2xl bg-green-500 px-6 py-4 text-xl font-bold text-white shadow-[0_4px_0_0_#15803d] active:translate-y-1 active:shadow-none"
+              className="w-full rounded-2xl bg-verde px-6 py-4 text-xl font-bold text-fondo active:scale-[0.98]"
             >
               Listo
             </button>
@@ -80,7 +80,7 @@ function ClaveForm({ onCerrar }: Props) {
             />
 
             {error && (
-              <p className="rounded-2xl bg-red-100 px-4 py-3 text-center font-bold text-red-700">
+              <p className="rounded-2xl bg-red-500/15 px-4 py-3 text-center font-bold text-red-300">
                 {error}
               </p>
             )}
@@ -88,7 +88,7 @@ function ClaveForm({ onCerrar }: Props) {
             <button
               type="submit"
               disabled={guardando}
-              className="w-full rounded-2xl bg-green-500 px-6 py-4 text-xl font-bold text-white shadow-[0_4px_0_0_#15803d] active:translate-y-1 active:shadow-none disabled:opacity-60"
+              className="w-full rounded-2xl bg-verde px-6 py-4 text-xl font-bold text-fondo active:scale-[0.98] disabled:opacity-60"
             >
               {guardando ? 'Guardando...' : 'Guardar contraseña'}
             </button>

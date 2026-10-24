@@ -23,7 +23,7 @@ function Rutas() {
 
   if (cargando) {
     return (
-      <main className="flex min-h-screen items-center justify-center text-xl font-bold text-gray-500">
+      <main className="flex min-h-screen items-center justify-center text-xl font-bold text-suave">
         Cargando...
       </main>
     )

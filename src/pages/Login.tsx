@@ -1,6 +1,9 @@
 import { useState, type FormEvent } from 'react'
 import { useAuth } from '../auth/context'
 
+const campo =
+  'w-full rounded-xl border border-borde bg-superficie px-4 py-3.5 text-base outline-none focus:border-verde'
+
 function Login() {
   const { iniciarSesion, aviso } = useAuth()
   const [correo, setCorreo] = useState('')
@@ -21,14 +24,14 @@ function Login() {
   const mensaje = error ?? aviso
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center gap-6 p-6">
-      <header className="text-center">
-        <div className="text-7xl">🏪</div>
-        <h1 className="mt-2 text-4xl font-extrabold text-green-600">Bodega</h1>
-        <p className="mt-1 text-gray-500">Entra con tu usuario</p>
+    <main className="mx-auto flex min-h-screen max-w-sm flex-col justify-center gap-8 px-6 py-10">
+      <header className="flex flex-col items-center text-center">
+        <img src="/icono.svg" alt="" className="h-16 w-16 rounded-2xl" />
+        <h1 className="mt-4 text-3xl font-semibold tracking-tight text-texto">Bodega</h1>
+        <p className="mt-1 text-sm text-suave">Inventario, caja y fiados</p>
       </header>
 
-      <form onSubmit={enviar} className="flex flex-col gap-4">
+      <form onSubmit={enviar} className="flex flex-col gap-3">
         <input
           type="email"
           autoComplete="username"
@@ -36,7 +39,7 @@ function Login() {
           value={correo}
           onChange={(e) => setCorreo(e.target.value)}
           required
-          className="rounded-2xl border-2 border-gray-200 bg-white px-4 py-3 text-lg outline-none focus:border-green-500"
+          className={campo}
         />
         <div className="relative">
           <input
@@ -46,19 +49,19 @@ function Login() {
             value={clave}
             onChange={(e) => setClave(e.target.value)}
             required
-            className="w-full rounded-2xl border-2 border-gray-200 bg-white py-3 pl-4 pr-24 text-lg outline-none focus:border-green-500"
+            className={`${campo} pr-24`}
           />
           <button
             type="button"
             onClick={() => setMostrar(!mostrar)}
-            className="absolute inset-y-0 right-4 text-sm font-bold text-gray-500"
+            className="absolute inset-y-0 right-4 text-sm font-medium text-azul"
           >
             {mostrar ? 'Ocultar' : 'Mostrar'}
           </button>
         </div>
 
         {mensaje && (
-          <p className="rounded-2xl bg-red-100 px-4 py-3 text-center font-bold text-red-700">
+          <p className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-center text-sm font-medium text-red-300">
             {mensaje}
           </p>
         )}
@@ -66,7 +69,7 @@ function Login() {
         <button
           type="submit"
           disabled={enviando}
-          className="w-full rounded-2xl bg-green-500 px-6 py-4 text-xl font-bold text-white shadow-[0_4px_0_0_#15803d] active:translate-y-1 active:shadow-none disabled:opacity-60"
+          className="mt-2 w-full rounded-xl bg-verde px-6 py-3.5 text-base font-semibold text-fondo active:scale-[0.98] disabled:opacity-60"
         >
           {enviando ? 'Entrando...' : 'Entrar'}
         </button>

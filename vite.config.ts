@@ -15,8 +15,8 @@ export default defineConfig({
         short_name: 'Bodega',
         description: 'Inventario, caja y fiados de la bodega',
         lang: 'es',
-        theme_color: '#22c55e',
-        background_color: '#f7f7f7',
+        theme_color: '#0a101d',
+        background_color: '#0a101d',
         display: 'standalone',
         start_url: '/',
         icons: [

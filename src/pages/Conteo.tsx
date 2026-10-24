@@ -32,7 +32,7 @@ function Conteo() {
     return (
       <>
         <PageTitle icon="🧮" title="Conteo semanal" subtitle="Lo hace quien lleva la bodega" />
-        <p className="rounded-2xl bg-white p-4 text-center font-bold text-gray-500">
+        <p className="rounded-2xl bg-superficie p-4 text-center font-bold text-suave">
           Tu usuario es de solo ver. Cuando se cierre una semana, el inventario se actualiza aquí.
         </p>
       </>
@@ -47,12 +47,12 @@ function Conteo() {
     (cierre.data ? conteos.isLoading : false)
 
   if (cargando) {
-    return <p className="py-10 text-center font-bold text-gray-500">Cargando...</p>
+    return <p className="py-10 text-center font-bold text-suave">Cargando...</p>
   }
 
   if (cierre.error || cerrados.error || categorias.error || inventario.error) {
     return (
-      <p className="py-10 text-center font-bold text-red-600">
+      <p className="py-10 text-center font-bold text-red-400">
         No se pudo cargar el conteo. ¿Ya corriste el archivo 0009 en Supabase?
       </p>
     )
@@ -75,14 +75,14 @@ function Conteo() {
           subtitle="Cuenta lo que hay y cierra la semana"
         />
         {error && (
-          <p className="mb-3 rounded-2xl bg-red-100 px-4 py-3 text-center font-bold text-red-700">
+          <p className="mb-3 rounded-2xl bg-red-500/15 px-4 py-3 text-center font-bold text-red-300">
             {error}
           </p>
         )}
         <button
           onClick={empezar}
           disabled={iniciando}
-          className="w-full rounded-2xl bg-green-500 px-6 py-4 text-xl font-bold text-white shadow-[0_4px_0_0_#15803d] active:translate-y-1 active:shadow-none disabled:opacity-60"
+          className="w-full rounded-2xl bg-verde px-6 py-4 text-xl font-bold text-fondo active:scale-[0.98] disabled:opacity-60"
         >
           {iniciando ? 'Abriendo...' : 'Empezar el conteo'}
         </button>

@@ -46,31 +46,31 @@ function PagoForm({ fiado, onCerrar }: Props) {
 
   return (
     <div className="fixed inset-0 z-20 flex items-end justify-center bg-black/40">
-      <form onSubmit={guardar} className="w-full max-w-md rounded-t-3xl bg-gray-50 p-5">
+      <form onSubmit={guardar} className="w-full max-w-md rounded-t-3xl bg-superficie-2 p-5">
         <div className="mb-2 flex items-center justify-between">
-          <h2 className="text-2xl font-extrabold text-gray-800">Registrar pago</h2>
-          <button type="button" onClick={onCerrar} className="text-2xl text-gray-400">
+          <h2 className="text-2xl font-extrabold text-texto">Registrar pago</h2>
+          <button type="button" onClick={onCerrar} className="text-2xl text-suave">
             ✕
           </button>
         </div>
-        <p className="mb-4 font-bold text-gray-500">
+        <p className="mb-4 font-bold text-suave">
           {fiado.cliente} debe {formatoPesos(fiado.saldo)}
         </p>
 
         <div className="flex flex-col gap-4">
-          <label className="flex flex-col gap-1 text-center font-bold text-gray-600">
+          <label className="flex flex-col gap-1 text-center font-bold text-suave">
             Cuánto pagó
             <input
               autoFocus
               inputMode="decimal"
               value={monto}
               onChange={(e) => setMonto(e.target.value)}
-              className="w-full rounded-2xl border-2 border-gray-200 bg-white px-4 py-4 text-center text-3xl font-extrabold outline-none focus:border-green-500"
+              className="w-full rounded-2xl border border-borde bg-superficie px-4 py-4 text-center text-3xl font-extrabold outline-none focus:border-verde"
             />
           </label>
 
           {error && (
-            <p className="rounded-2xl bg-red-100 px-4 py-3 text-center font-bold text-red-700">
+            <p className="rounded-2xl bg-red-500/15 px-4 py-3 text-center font-bold text-red-300">
               {error}
             </p>
           )}
@@ -78,7 +78,7 @@ function PagoForm({ fiado, onCerrar }: Props) {
           <button
             type="submit"
             disabled={guardando}
-            className="w-full rounded-2xl bg-green-500 px-6 py-4 text-xl font-bold text-white shadow-[0_4px_0_0_#15803d] active:translate-y-1 active:shadow-none disabled:opacity-60"
+            className="w-full rounded-2xl bg-verde px-6 py-4 text-xl font-bold text-fondo active:scale-[0.98] disabled:opacity-60"
           >
             {guardando ? 'Guardando...' : 'Guardar pago'}
           </button>
