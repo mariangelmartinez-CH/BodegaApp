@@ -1,4 +1,5 @@
-import { useState, type ReactNode } from 'react'
+import { useLayoutEffect, useState, type ReactNode } from 'react'
+import { useMatch, useNavigate, useNavigationType, useParams } from 'react-router'
 import { useAuth } from '../auth/context'
 import Icono from '../components/Icono'
 import PageTitle from '../components/PageTitle'
@@ -7,6 +8,8 @@ import { useCategorias, useInventario } from '../data/consultas'
 import { claseCategoria } from '../lib/colores'
 import { formatoCantidad } from '../lib/formato'
 import type { ProductoInventario } from '../types'
+
+const posicionLista = { valor: 0 }
 
 function BarraSuperior({ onVolver, children }: { onVolver: () => void; children: ReactNode }) {
   return (
@@ -72,9 +75,23 @@ function Inventario() {
   const puedeEditar = perfil?.rol === 'admin' || perfil?.rol === 'operador'
   const categorias = useCategorias()
   const inventario = useInventario()
-  const [categoriaId, setCategoriaId] = useState<string | null>(null)
-  const [soloFalta, setSoloFalta] = useState(false)
+  const navigate = useNavigate()
+  const tipoNavegacion = useNavigationType()
+  const { categoriaId = null } = useParams()
+  const soloFalta = useMatch('/faltan') !== null
   const [editando, setEditando] = useState<ProductoInventario | 'nuevo' | null>(null)
+
+  const mostrandoLista = categoriaId === null && !soloFalta
+  const datosListos = !categorias.isLoading && !inventario.isLoading
+
+  useLayoutEffect(() => {
+    if (!datosListos) return
+    if (mostrandoLista && tipoNavegacion === 'POP') {
+      window.scrollTo(0, posicionLista.valor)
+    } else {
+      window.scrollTo(0, 0)
+    }
+  }, [datosListos, mostrandoLista, categoriaId, tipoNavegacion])
 
   if (categorias.isLoading || inventario.isLoading) {
     return <p className="py-10 text-center text-suave">Cargando...</p>
@@ -93,16 +110,23 @@ function Inventario() {
   const categoriaActual = lista.find((c) => c.id === categoriaId) ?? null
   const faltan = productos.filter((p) => p.stock <= p.stock_minimo)
 
-  function irACategorias() {
-    setSoloFalta(false)
-    setCategoriaId(null)
-    window.scrollTo({ top: 0 })
+  function abrir(ruta: string) {
+    posicionLista.valor = window.scrollY
+    navigate(ruta)
+  }
+
+  function volver() {
+    if (window.history.state && window.history.state.idx > 0) {
+      navigate(-1)
+    } else {
+      navigate('/', { replace: true })
+    }
   }
 
   if (soloFalta) {
     return (
       <>
-        <BarraSuperior onVolver={irACategorias}>
+        <BarraSuperior onVolver={volver}>
           <span className="truncate font-semibold text-texto">Lo que falta</span>
           <span className="rounded-full bg-red-500/15 px-2 py-0.5 text-xs font-medium text-red-300">
             {faltan.length}
@@ -143,7 +167,7 @@ function Inventario() {
         </div>
 
         <button
-          onClick={() => setSoloFalta(true)}
+          onClick={() => abrir('/faltan')}
           className="mb-6 flex w-full items-center justify-between rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-left font-medium text-red-300 active:bg-red-500/20"
         >
           <span>Ver lo que falta</span>
@@ -160,10 +184,7 @@ function Inventario() {
             return (
               <li key={c.id}>
                 <button
-                  onClick={() => {
-                    setCategoriaId(c.id)
-                    window.scrollTo({ top: 0 })
-                  }}
+                  onClick={() => abrir(`/categoria/${c.id}`)}
                   className="flex w-full items-center gap-3 rounded-xl border border-borde bg-superficie p-3 text-left transition-colors active:bg-superficie-2"
                 >
                   <span
@@ -196,7 +217,7 @@ function Inventario() {
 
   return (
     <>
-      <BarraSuperior onVolver={irACategorias}>
+      <BarraSuperior onVolver={volver}>
         <span
           className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border text-lg ${claseCategoria(categoriaActual.color)}`}
         >

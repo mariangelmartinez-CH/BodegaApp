@@ -39,6 +39,8 @@ function Rutas() {
     <Routes>
       <Route element={<Layout />}>
         <Route index element={<Inventario />} />
+        <Route path="categoria/:categoriaId" element={<Inventario />} />
+        <Route path="faltan" element={<Inventario />} />
         <Route path="conteo" element={puedeContar ? <Conteo /> : <Navigate to="/" replace />} />
         <Route path="caja" element={<Caja />} />
         <Route path="fiados" element={<Fiados />} />
