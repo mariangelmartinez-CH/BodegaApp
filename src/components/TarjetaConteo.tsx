@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { aTexto, formatoCantidad, formatoPesos, leerNumero } from '../lib/formato'
+import { aTexto, formatoCantidad, leerNumero } from '../lib/formato'
 import { claseCategoria } from '../lib/colores'
 import type { Categoria, ProductoInventario } from '../types'
 
@@ -47,7 +47,6 @@ function TarjetaConteo({
       >
         <span className="text-6xl">{categoria?.emoji ?? '📦'}</span>
         <h2 className="text-2xl font-extrabold leading-tight">{producto.nombre}</h2>
-        <p className="text-sm font-bold opacity-70">{formatoPesos(producto.precio_venta)}</p>
       </div>
 
       <div className="rounded-2xl bg-white p-4 text-center">

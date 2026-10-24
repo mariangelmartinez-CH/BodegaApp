@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
-import { formatoPesos, leerDinero } from '../lib/formato'
+import { formatoCantidad, leerDinero } from '../lib/formato'
 import { supabase } from '../lib/supabase'
 import type { Categoria, Cierre, Conteo, ProductoInventario } from '../types'
 import TarjetaConteo from './TarjetaConteo'
@@ -88,6 +88,7 @@ function ConteoSesion({ cierre, productos, categorias, conteos, esPrimero }: Pro
     await Promise.all([
       cliente.invalidateQueries({ queryKey: ['cierre-abierto'] }),
       cliente.invalidateQueries({ queryKey: ['cierres-cerrados'] }),
+      cliente.invalidateQueries({ queryKey: ['cierres'] }),
       cliente.invalidateQueries({ queryKey: ['inventario'] }),
     ])
     setGuardando(false)
@@ -112,10 +113,8 @@ function ConteoSesion({ cierre, productos, categorias, conteos, esPrimero }: Pro
       const unidades = Math.max(p.stock - c.stock_contado, 0)
       return unidades > 0 ? [{ producto: p, unidades }] : []
     })
-    const ventaEstimada = vendidas.reduce(
-      (suma, v) => suma + v.unidades * (v.producto.precio_venta ?? 0),
-      0,
-    )
+    const totalUnidades = vendidas.reduce((suma, v) => suma + v.unidades, 0)
+    const masVendidos = [...vendidas].sort((a, b) => b.unidades - a.unidades).slice(0, 5)
 
     return (
       <div className="flex flex-col gap-4">
@@ -141,9 +140,21 @@ function ConteoSesion({ cierre, productos, categorias, conteos, esPrimero }: Pro
           </p>
         ) : (
           <div className="rounded-2xl bg-white p-4">
-            <p className="text-sm font-bold text-gray-500">Venta estimada de la semana</p>
-            <p className="text-3xl font-extrabold text-green-700">{formatoPesos(ventaEstimada)}</p>
+            <p className="text-sm font-bold text-gray-500">Se vendieron esta semana</p>
+            <p className="text-3xl font-extrabold text-green-700">
+              {formatoCantidad(totalUnidades)} unidades
+            </p>
             <p className="text-sm text-gray-500">{vendidas.length} productos con ventas</p>
+            {masVendidos.length > 0 && (
+              <ul className="mt-3 flex flex-col gap-1 border-t border-gray-100 pt-3">
+                {masVendidos.map((v) => (
+                  <li key={v.producto.id} className="flex justify-between text-sm font-bold text-gray-600">
+                    <span>{v.producto.nombre}</span>
+                    <span>{formatoCantidad(v.unidades)}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         )}
 

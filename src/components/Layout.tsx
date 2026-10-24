@@ -1,17 +1,21 @@
+import { useState } from 'react'
 import { Outlet } from 'react-router'
 import { useAuth } from '../auth/context'
 import { useTiempoReal } from '../data/useTiempoReal'
 import type { Rol } from '../types'
 import BottomNav from './BottomNav'
+import ClaveForm from './ClaveForm'
 
 const etiquetaRol: Record<Rol, string> = {
   admin: 'Admin',
   operador: 'Operador',
   observador: 'Solo ver',
+  gestor_pedidos: 'Pedidos',
 }
 
 function Layout() {
   const { perfil, cerrarSesion } = useAuth()
+  const [cambiandoClave, setCambiandoClave] = useState(false)
   useTiempoReal()
 
   return (
@@ -23,17 +27,26 @@ function Layout() {
             {perfil ? etiquetaRol[perfil.rol] : ''}
           </p>
         </div>
-        <button
-          onClick={cerrarSesion}
-          className="rounded-2xl border-2 border-gray-200 px-3 py-1 text-sm font-bold text-gray-500 active:bg-gray-100"
-        >
-          Salir
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setCambiandoClave(true)}
+            className="rounded-2xl border-2 border-gray-200 px-3 py-1 text-sm font-bold text-gray-500 active:bg-gray-100"
+          >
+            Clave
+          </button>
+          <button
+            onClick={cerrarSesion}
+            className="rounded-2xl border-2 border-gray-200 px-3 py-1 text-sm font-bold text-gray-500 active:bg-gray-100"
+          >
+            Salir
+          </button>
+        </div>
       </header>
       <main className="flex-1 p-4 pb-28">
         <Outlet />
       </main>
       <BottomNav />
+      {cambiandoClave && <ClaveForm onCerrar={() => setCambiandoClave(false)} />}
     </div>
   )
 }
