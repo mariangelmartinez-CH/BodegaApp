@@ -89,6 +89,7 @@ function Caja() {
           <>
             <p className="mt-1 text-4xl font-semibold text-texto">{formatoPesos(ultimo.monto)}</p>
             <p className="mt-1 text-sm text-suave">{textoFecha(ultimo.fecha)}</p>
+            {ultimo.nota && <p className="mt-2 text-sm text-texto">{ultimo.nota}</p>}
             {diferencia !== null && (
               <p
                 className={`mt-2 text-sm font-medium ${diferencia >= 0 ? 'text-verde' : 'text-red-400'}`}
@@ -132,8 +133,8 @@ function Caja() {
                   <p className="font-medium text-texto">{formatoPesos(r.monto)}</p>
                   <p className="text-xs text-suave">
                     {textoFecha(r.fecha)}, {r.origen}
-                    {r.nota && `, ${r.nota}`}
                   </p>
+                  {r.nota && <p className="mt-1 text-sm text-texto">{r.nota}</p>}
                 </div>
                 {esAdmin && r.manualId && (
                   <button

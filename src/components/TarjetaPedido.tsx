@@ -65,7 +65,9 @@ export function TarjetaPedido({ p, ...acciones }: { p: Pedido } & Acciones) {
         )}
       </div>
 
-      {p.detalle && <p className="mt-2 text-sm text-suave">{p.detalle}</p>}
+      {p.detalle && (
+        <p className="mt-3 rounded-lg bg-superficie-2 px-3 py-2 text-sm text-texto">{p.detalle}</p>
+      )}
 
       <div className="mt-3 flex flex-wrap gap-2">
         {acciones.puedeGestionar && (

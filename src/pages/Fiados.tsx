@@ -52,10 +52,8 @@ function GrupoCliente({
                   </span>
                 )}
               </p>
-              <p className="text-xs text-suave">
-                {textoFecha(f.fecha)}
-                {f.nota && `, ${f.nota}`}
-              </p>
+              <p className="text-xs text-suave">{textoFecha(f.fecha)}</p>
+              {f.nota && <p className="mt-1 text-sm text-texto">{f.nota}</p>}
             </div>
             <div className="flex items-center gap-3">
               {esAdmin && (
@@ -85,6 +83,7 @@ function GrupoCliente({
 function Fiados() {
   const { perfil } = useAuth()
   const puedeRegistrar = perfil?.rol === 'admin' || perfil?.rol === 'operador'
+  const puedePagar = puedeRegistrar || perfil?.rol === 'gestor_pedidos'
   const esAdmin = perfil?.rol === 'admin'
   const cliente = useQueryClient()
   const fiados = useFiados()
@@ -148,7 +147,7 @@ function Fiados() {
             key={nombre}
             nombre={nombre}
             lineas={lineas}
-            puedeRegistrar={puedeRegistrar}
+            puedeRegistrar={puedePagar}
             esAdmin={esAdmin}
             onPagar={setPagando}
             onBorrar={borrar}
