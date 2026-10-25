@@ -20,15 +20,19 @@ function GrupoCliente({
   nombre,
   lineas,
   puedeRegistrar,
+  puedeEditar,
   esAdmin,
   onPagar,
+  onEditar,
   onBorrar,
 }: {
   nombre: string
   lineas: Fiado[]
   puedeRegistrar: boolean
+  puedeEditar: boolean
   esAdmin: boolean
   onPagar: (f: Fiado) => void
+  onEditar: (f: Fiado) => void
   onBorrar: (f: Fiado) => void
 }) {
   const total = lineas.reduce((suma, f) => suma + f.saldo, 0)
@@ -56,6 +60,11 @@ function GrupoCliente({
               {f.nota && <p className="mt-1 text-sm text-texto">{f.nota}</p>}
             </div>
             <div className="flex items-center gap-3">
+              {puedeEditar && (
+                <button onClick={() => onEditar(f)} className="text-sm font-medium text-azul">
+                  Editar
+                </button>
+              )}
               {esAdmin && (
                 <button
                   onClick={() => onBorrar(f)}
@@ -89,6 +98,7 @@ function Fiados() {
   const fiados = useFiados()
   const [nuevo, setNuevo] = useState(false)
   const [pagando, setPagando] = useState<Fiado | null>(null)
+  const [editando, setEditando] = useState<Fiado | null>(null)
 
   async function borrar(f: Fiado) {
     const aviso = `¿Borrar el fiado de ${f.cliente} por ${formatoPesos(f.monto)}? Se borran también sus pagos.`
@@ -148,14 +158,19 @@ function Fiados() {
             nombre={nombre}
             lineas={lineas}
             puedeRegistrar={puedePagar}
+            puedeEditar={puedeRegistrar}
             esAdmin={esAdmin}
             onPagar={setPagando}
+            onEditar={setEditando}
             onBorrar={borrar}
           />
         ))}
       </ul>
 
       {nuevo && <FiadoForm onCerrar={() => setNuevo(false)} />}
+      {editando && (
+        <FiadoForm key={editando.id} fiado={editando} onCerrar={() => setEditando(null)} />
+      )}
       {pagando && <PagoForm key={pagando.id} fiado={pagando} onCerrar={() => setPagando(null)} />}
     </>
   )
