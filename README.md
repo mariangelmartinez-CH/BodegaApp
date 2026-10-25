@@ -1,5 +1,12 @@
 # BodegaApp
 
+<p align="center">
+  <img src="capturas/login.png" alt="Inicio de sesión / Sign in" width="180">
+  <img src="capturas/inventario.png" alt="Inventario / Inventory" width="180">
+  <img src="capturas/conteo.png" alt="Conteo semanal / Weekly count" width="180">
+  <img src="capturas/pedidos.png" alt="Pedidos / Orders" width="180">
+</p>
+
 Español | [English](#english)
 
 Sinceramente, este es mi primer proyecto automatizando todo lo que he visto en estos 3 semestres de universidad. Es un proyecto pequeño, de uso familiar, para nuestro negocio (un abasto pequeño), hecho a través de herramientas de vibe coding. Mi agente fue Claude, y usé herramientas de punta como Vercel y Supabase.
