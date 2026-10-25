@@ -1,7 +1,8 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { useState, type FormEvent } from 'react'
-import { leerDinero } from '../lib/formato'
+import { sumarEfectivo } from '../lib/formato'
 import { supabase } from '../lib/supabase'
+import CampoEfectivo from './CampoEfectivo'
 
 type Props = {
   onCerrar: () => void
@@ -12,7 +13,8 @@ const campo =
 
 function EfectivoForm({ onCerrar }: Props) {
   const cliente = useQueryClient()
-  const [monto, setMonto] = useState('')
+  const [billetes, setBilletes] = useState('')
+  const [monedas, setMonedas] = useState('')
   const [nota, setNota] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [guardando, setGuardando] = useState(false)
@@ -21,16 +23,19 @@ function EfectivoForm({ onCerrar }: Props) {
     e.preventDefault()
     setError(null)
 
-    const valor = leerDinero(monto)
-    if (valor === null || valor < 0) {
-      setError('Escribe cuánto efectivo hay')
+    const suma = sumarEfectivo(billetes, monedas)
+    if (!suma) {
+      setError('Escribe cuántos billetes y cuántas monedas hay')
       return
     }
 
     setGuardando(true)
-    const { error: fallo } = await supabase
-      .from('cash_counts')
-      .insert({ monto: valor, nota: nota.trim() === '' ? null : nota.trim() })
+    const { error: fallo } = await supabase.from('cash_counts').insert({
+      monto: suma.total,
+      billetes: suma.billetes,
+      monedas: suma.monedas,
+      nota: nota.trim() === '' ? null : nota.trim(),
+    })
     if (fallo) {
       setError(fallo.message)
       setGuardando(false)
@@ -53,16 +58,12 @@ function EfectivoForm({ onCerrar }: Props) {
         </div>
 
         <div className="flex flex-col gap-4">
-          <label className="flex flex-col gap-1 text-center text-sm font-medium text-suave">
-            Efectivo en pesos que hay ahora
-            <input
-              autoFocus
-              inputMode="decimal"
-              value={monto}
-              onChange={(e) => setMonto(e.target.value)}
-              className="w-full rounded-xl border border-borde bg-superficie px-4 py-4 text-center text-3xl font-semibold text-texto outline-none focus:border-verde"
-            />
-          </label>
+          <CampoEfectivo
+            billetes={billetes}
+            monedas={monedas}
+            onBilletes={setBilletes}
+            onMonedas={setMonedas}
+          />
 
           <label className="flex flex-col gap-1 text-sm font-medium text-suave">
             Nota (opcional)

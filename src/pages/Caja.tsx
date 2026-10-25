@@ -12,8 +12,15 @@ type Registro = {
   manualId: string | null
   fecha: string
   monto: number
+  billetes: number | null
+  monedas: number | null
   origen: string
   nota: string | null
+}
+
+function desglose(r: { billetes: number | null; monedas: number | null }) {
+  if (r.billetes === null && r.monedas === null) return null
+  return `Billetes ${formatoPesos(r.billetes ?? 0)}, monedas ${formatoPesos(r.monedas ?? 0)}`
 }
 
 function textoFecha(iso: string) {
@@ -61,6 +68,8 @@ function Caja() {
         manualId: null,
         fecha: c.cerrado_en,
         monto: c.efectivo_contado as number,
+        billetes: c.billetes,
+        monedas: c.monedas,
         origen: c.es_inicial ? 'Conteo inicial' : 'Conteo semanal',
         nota: null,
       })),
@@ -69,6 +78,8 @@ function Caja() {
       manualId: m.id,
       fecha: m.creado_en,
       monto: m.monto,
+      billetes: m.billetes,
+      monedas: m.monedas,
       origen: 'Solo efectivo',
       nota: m.nota,
     })),
@@ -88,6 +99,7 @@ function Caja() {
         {ultimo ? (
           <>
             <p className="mt-1 text-4xl font-semibold text-texto">{formatoPesos(ultimo.monto)}</p>
+            {desglose(ultimo) && <p className="mt-1 text-sm text-texto">{desglose(ultimo)}</p>}
             <p className="mt-1 text-sm text-suave">{textoFecha(ultimo.fecha)}</p>
             {ultimo.nota && <p className="mt-2 text-sm text-texto">{ultimo.nota}</p>}
             {diferencia !== null && (
@@ -134,6 +146,7 @@ function Caja() {
                   <p className="text-xs text-suave">
                     {textoFecha(r.fecha)}, {r.origen}
                   </p>
+                  {desglose(r) && <p className="mt-0.5 text-xs text-suave">{desglose(r)}</p>}
                   {r.nota && <p className="mt-1 text-sm text-texto">{r.nota}</p>}
                 </div>
                 {esAdmin && r.manualId && (

@@ -37,7 +37,7 @@ export function useCierres() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('weekly_closings')
-        .select('id, es_inicial, efectivo_contado, cerrado_en')
+        .select('id, es_inicial, efectivo_contado, billetes, monedas, cerrado_en')
         .eq('estado', 'cerrado')
         .order('cerrado_en', { ascending: false })
         .limit(12)
@@ -53,7 +53,7 @@ export function useEfectivoManual() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('cash_counts')
-        .select('id, monto, nota, creado_en')
+        .select('id, monto, billetes, monedas, nota, creado_en')
         .order('creado_en', { ascending: false })
         .limit(30)
       if (error) throw error

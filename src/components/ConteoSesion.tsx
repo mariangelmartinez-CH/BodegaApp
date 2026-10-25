@@ -1,8 +1,9 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
-import { formatoCantidad, leerDinero } from '../lib/formato'
+import { formatoCantidad, sumarEfectivo } from '../lib/formato'
 import { supabase } from '../lib/supabase'
 import type { Categoria, Cierre, Conteo, ProductoInventario } from '../types'
+import CampoEfectivo from './CampoEfectivo'
 import TarjetaConteo from './TarjetaConteo'
 
 type Props = {
@@ -23,7 +24,8 @@ function ConteoSesion({ cierre, productos, categorias, conteos, esPrimero }: Pro
   })
   const [resumen, setResumen] = useState(() => productos.every((p) => contados.has(p.id)))
   const [guardando, setGuardando] = useState(false)
-  const [efectivo, setEfectivo] = useState('')
+  const [billetes, setBilletes] = useState('')
+  const [monedas, setMonedas] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [cerrado, setCerrado] = useState(false)
 
@@ -69,16 +71,25 @@ function ConteoSesion({ cierre, productos, categorias, conteos, esPrimero }: Pro
   }
 
   async function cerrarSemana() {
-    const dinero = leerDinero(efectivo)
-    if (dinero === null || dinero < 0) {
-      setError('Escribe el efectivo en pesos que contaste')
+    const suma = sumarEfectivo(billetes, monedas)
+    if (!suma) {
+      setError('Escribe cuántos billetes y cuántas monedas hay en caja')
       return
     }
     setError(null)
     setGuardando(true)
+    const { error: antes } = await supabase
+      .from('weekly_closings')
+      .update({ billetes: suma.billetes, monedas: suma.monedas })
+      .eq('id', cierre.id)
+    if (antes) {
+      setError(antes.message)
+      setGuardando(false)
+      return
+    }
     const { error: fallo } = await supabase.rpc('cerrar_semana', {
       p_cierre: cierre.id,
-      p_efectivo: dinero,
+      p_efectivo: suma.total,
     })
     if (fallo) {
       setError(fallo.message)
@@ -158,15 +169,17 @@ function ConteoSesion({ cierre, productos, categorias, conteos, esPrimero }: Pro
           </div>
         )}
 
-        <label className="flex flex-col gap-1 text-center font-bold text-suave">
-          Efectivo en pesos que hay hoy en caja
-          <input
-            inputMode="decimal"
-            value={efectivo}
-            onChange={(e) => setEfectivo(e.target.value)}
-            className="w-full rounded-2xl border border-borde bg-superficie px-4 py-4 text-center text-3xl font-extrabold outline-none focus:border-verde"
+        <div>
+          <p className="mb-2 text-center text-sm font-medium text-suave">
+            Efectivo en pesos que hay hoy en caja
+          </p>
+          <CampoEfectivo
+            billetes={billetes}
+            monedas={monedas}
+            onBilletes={setBilletes}
+            onMonedas={setMonedas}
           />
-        </label>
+        </div>
 
         {error && (
           <p className="rounded-2xl bg-red-500/15 px-4 py-3 text-center font-bold text-red-300">

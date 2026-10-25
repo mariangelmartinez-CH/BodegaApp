@@ -48,6 +48,8 @@ export type CierreCerrado = {
   id: string
   es_inicial: boolean
   efectivo_contado: number | null
+  billetes: number | null
+  monedas: number | null
   cerrado_en: string
 }
 
@@ -96,6 +98,8 @@ export type Pedido = {
 export type EfectivoManual = {
   id: string
   monto: number
+  billetes: number | null
+  monedas: number | null
   nota: string | null
   creado_en: string
 }

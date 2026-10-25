@@ -28,6 +28,14 @@ export function leerDinero(texto: string): number | null {
   return Number.isFinite(valor) ? valor : null
 }
 
+export function sumarEfectivo(billetes: string, monedas: string) {
+  const b = leerDinero(billetes)
+  const m = leerDinero(monedas)
+  if (b === null && m === null) return null
+  if ((b ?? 0) < 0 || (m ?? 0) < 0) return null
+  return { billetes: b ?? 0, monedas: m ?? 0, total: (b ?? 0) + (m ?? 0) }
+}
+
 export function aTexto(valor: number | null) {
   return valor === null ? '' : String(valor).replace('.', ',')
 }
